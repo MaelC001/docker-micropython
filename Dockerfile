@@ -29,25 +29,35 @@ RUN apt-get clean \
 # Creating a user, as ng-cross cannot be built as root.
 RUN useradd --no-create-home micropython
 
-RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git \
-#    && git clone https://github.com/micropython/micropython.git \
-    && git clone https://github.com/MaelC001/micropython.git \
-    && cd micropython \
-    && git checkout $VERSION \
-    && git submodule update --init \
-    && git submodule update --init lib/axtls
 
-RUN chown -R micropython:micropython ../esp-open-sdk ../micropython
+# long commande, for modul g++
+#RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+#RUN chown -R micropython:micropython ../esp-open-sdk
 
 USER micropython
+
+COPY ./tarballs/esp-open-sdk.tar.gz .
+RUN tar xf esp-open-sdk.tar.gz \
+    && chown -R micropython:micropython ../esp-open-sdk
 
 RUN mkdir -p esp-open-sdk/crosstool-NG/.build/tarballs/
 COPY ./tarballs/expat-2.1.0.tar.gz esp-open-sdk/crosstool-NG/.build/tarballs/
 COPY ./tarballs/isl-0.14.tar.gz esp-open-sdk/crosstool-NG/.build/tarballs/
 
 RUN cd esp-open-sdk && make STANDALONE=y
-
 ENV PATH=/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
+
+USER root
+
+# for micropython perso
+RUN git clone https://github.com/MaelC001/micropython.git \
+# RUN git clone https://github.com/micropython/micropython.git
+    && cd micropython \
+    && git checkout $VERSION \
+    && git submodule update --init
+RUN chown -R micropython:micropython ../micropython
+
+USER micropython
 
 RUN cd micropython/mpy-cross && make
 
