@@ -60,10 +60,10 @@ RUN git clone https://github.com/MaelC001/micropython.git \
     && cd micropython \
     && git checkout $VERSION \
     && git submodule update --init
-RUN chown -R micropython:micropython ../micropython
+
+COPY .build_micropython.sh /build_micropython.sh
+RUN chown -R micropython:micropython ../micropython .build_micropython.sh
 
 USER micropython
-
-COPY .build_micropython.sh .
 
 RUN bash build_micropython.sh
