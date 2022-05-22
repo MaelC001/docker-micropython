@@ -60,10 +60,12 @@ RUN git clone https://github.com/MaelC001/micropython.git \
     && cd micropython \
     && git checkout $VERSION \
     && git submodule update --init
-
-COPY .build_micropython.sh /build_micropython.sh
-RUN chown -R micropython:micropython ../micropython .build_micropython.sh
+RUN chown -R micropython:micropython ../micropython
 
 USER micropython
 
-RUN bash build_micropython.sh
+RUN cd micropython/mpy-cross && make
+
+RUN cd micropython/ports/esp8266 \
+    && make clean \
+    && make
