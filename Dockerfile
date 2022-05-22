@@ -49,8 +49,8 @@ RUN mkdir -p esp-open-sdk/crosstool-NG/.build/tarballs/
 COPY ./tarballs/expat-2.1.0.tar.gz esp-open-sdk/crosstool-NG/.build/tarballs/
 COPY ./tarballs/isl-0.14.tar.gz esp-open-sdk/crosstool-NG/.build/tarballs/
 
-#RUN cd esp-open-sdk && make STANDALONE=y
-#ENV PATH=/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
+RUN cd esp-open-sdk && make STANDALONE=y
+ENV PATH=/esp-open-sdk/xtensa-lx106-elf/bin:$PATH
 
 USER root
 
