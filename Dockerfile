@@ -36,8 +36,10 @@ RUN useradd --no-create-home micropython
 
 USER micropython
 
-COPY ./tarballs/esp-open-sdk.tar.gz .
-RUN tar xf esp-open-sdk.tar.gz \
+COPY ./tarballs/esp-open-sdk.tar.xz_part* .
+RUN cat esp-open-sdk.tar.xz_part* > esp-open-sdk.tar.xz \
+    && rm esp-open-sdk.tar.xz_part* \
+    && tar xf esp-open-sdk.tar.xz \
     && chown -R micropython:micropython ../esp-open-sdk
 
 RUN mkdir -p esp-open-sdk/crosstool-NG/.build/tarballs/
