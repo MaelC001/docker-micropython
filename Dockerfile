@@ -31,17 +31,17 @@ RUN useradd --no-create-home micropython
 
 
 # long commande, for modul g++
-#RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
-#RUN chown -R micropython:micropython ../esp-open-sdk
+RUN git clone --recursive https://github.com/pfalcon/esp-open-sdk.git
+RUN chown -R micropython:micropython ../esp-open-sdk
 
-COPY ./tarballs/esp-open-sdk.tar.xz_part00 .
-COPY ./tarballs/esp-open-sdk.tar.xz_part01 .
-COPY ./tarballs/esp-open-sdk.tar.xz_part02 .
-RUN cat esp-open-sdk.tar.xz_part* > esp-open-sdk.tar.xz \
-    && tar xf esp-open-sdk.tar.xz \
-    && rm esp-open-sdk.tar.xz_part* \
-    && rm esp-open-sdk.tar.xz  \
-    && chown -R micropython:micropython esp-open-sdk
+#COPY ./tarballs/esp-open-sdk.tar.xz_part00 .
+#COPY ./tarballs/esp-open-sdk.tar.xz_part01 .
+#COPY ./tarballs/esp-open-sdk.tar.xz_part02 .
+#RUN cat esp-open-sdk.tar.xz_part* > esp-open-sdk.tar.xz \
+#    && tar xf esp-open-sdk.tar.xz \
+#    && rm esp-open-sdk.tar.xz_part* \
+#    && rm esp-open-sdk.tar.xz  \
+#    && chown -R micropython:micropython esp-open-sdk
 
 USER micropython
 
@@ -62,10 +62,4 @@ RUN git clone https://github.com/MaelC001/micropython.git \
     && git submodule update --init
 RUN chown -R micropython:micropython ../micropython
 
-USER micropython
-
-RUN cd micropython/mpy-cross && make
-
-RUN cd micropython/ports/esp8266 \
-    && make clean \
-    && make
+COPY ./create_bin.sh /create_bin.sh
